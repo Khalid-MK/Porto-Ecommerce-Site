@@ -1,0 +1,88 @@
+﻿@model AdminViewModel
+@{
+    ViewData["Title"] = "Roles";
+}
+
+
+
+<div class=" login" style="width:30%;">
+
+
+    <a class="btn btn-info mb-3" style="width:auto" id="btnclick" >Add new role</a>
+    @{
+        foreach (var role in Model.Roles)
+        {
+            <div class="card mb-3">
+                <div class="card-header">
+                    Role Id : @role.Id
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title">@role.Name</h3>
+                </div>
+                <div class="card-footer">
+                    @{
+                        if (role.Name == "Admin" || role.Name == "Shop_Owner")
+                        {
+                            <a data-confirm="Are you sure?" style="width:auto"  class="btn btn-danger mb-3 disabled">Delete</a>
+                        }
+                        else
+                        {
+                            <a data-confirm="Are you sure?" href="DeleteRole/@role.Id" style="width:auto" class="btn btn-danger mb-3">Delete</a>
+                        }
+                    }
+
+                </div>
+            </div>
+        }
+    }
+
+</div>
+
+
+<div class="modal fade " id="requestModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="exampleModalLabel">New Role</h2>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form onsubmit="MapValue()" asp-action="AddRole" method="post" >
+                    <div class="form-group">
+                        <label for="request-title" class="col-form-label">Role title</label>
+                        <input asp-for="Role.Name" type="text" class="form-control" id="request-title">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="btnHideModal" class="btn btn--gray">Close</button>
+                        <button type="submit" id="btnHideModal" class="btn btn--primary">Add</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+
+    <script>
+
+        
+        // to show pop up form
+        $("#btnclick").click(function () {
+            $("#requestModal").modal('show');
+        });
+
+        // to hide pop up form
+        $("#btnHideModal").click(function () {
+            var value = $('#request-title').val();
+            $('#requestTitle').val(value);
+            $("#requestModal").modal('hide');
+        });
+
+    </script>
+
+
+
+ }

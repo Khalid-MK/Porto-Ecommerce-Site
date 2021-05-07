@@ -1,0 +1,64 @@
+﻿@model ProductViewModel
+@*<form method="get" class="form-inline">
+        <input name="filter" class="form-control" placeholder="filter"
+               value="@Model.RouteValue["Filter"]" />
+        <button type="submit" class="btn btn-info">
+            <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search
+        </button>
+    </form>*@
+
+
+<section class="filters">
+    <!-- search box -->
+    <form method="get" asp-action="Index">
+        <div class="search-box">
+            <input name="filter" class="search-box__input" placeholder="Search..."
+                   value="@Model.ProductsPaging.RouteValue["Filter"]" />
+            @*<input class="search-box__input" placeholder="Search..." type="text" name="txt_search" id="" value="@Model.RouteValue["Filter"]" asp-for="@Model.FirstOrDefault().Name" asp-route="@Model.RouteValue["Filter"]">*@
+            <button type="submit" class="search-box__btn">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+
+    </form>
+    <!-- filter list -->
+    <div>
+        <!-- filter header -->
+        <h5>Categories</h5>
+        <!-- filter list -->
+        <ul class="list list--vr-separator">
+            @foreach (var item in Model.Categories)
+            {
+                <li class="link list__item"><a class="text-decoration-none text-dark" asp-action="GetProductsByCategories" asp-route-category="@item.Name" asp-controller="Products"><i class="link__icon fas fa-angle-right"></i>@item.Name</a></li>
+
+            }
+        </ul>
+    </div>
+    <!-- filter tags -->
+    <div>
+        <!-- filter header -->
+        <h5>Tags</h5>
+        <!-- filter tags -->
+      
+        <div class="tags">
+
+            @foreach (var item in Model.Tags)
+            {
+                <span class="tag">
+                    <a class=" text-decoration-none text-white" asp-route-Title="@item.Title" asp-controller="Products" asp-action="GetProductsByTag">@item.Title</a>
+                </span>
+            }
+        </div>
+    </div>
+    <!-- related items -->
+    <div>
+        <!-- title -->
+        <h5></h5>
+        <!-- small item -->
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+</section>
+
+

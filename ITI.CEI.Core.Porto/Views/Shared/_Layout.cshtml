@@ -1,0 +1,271 @@
+﻿
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Porto @ViewData["Title"] </title>
+
+    <environment exclude="Development">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute"
+              crossorigin="anonymous"
+              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" />
+    </environment>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="~/css/style.css" rel="stylesheet" />
+    @RenderSection("Styles", required: false)
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+</head>
+<body style="font-size:1.26rem;">
+    <header>
+        <div class="header">
+            <!-- upper header -->
+            <div class="header__upper">
+                <!-- container -->
+                <div class="container">
+                    <!-- contact info -->
+                    <ul class="list list--hr list--hr-separator">
+                        <li class="list__item">
+                            <span class="info">
+                                <!-- icon -->
+                                <i class="info__icon far fa-dot-circle"></i>
+                                <!-- info -->
+                                <span class="info__data">26 Alharam St. , Giza</span>
+                            </span>
+                        </li>
+                        <li class="list__item">
+                            <a href="#" class="info">
+                                <!-- icon -->
+                                <i class="info__icon fab fa-whatsapp"></i>
+                                <!-- info -->
+                                <span class="info__data">123-456-7890</span>
+                            </a>
+                        </li>
+                        <li class="list__item">
+                            <a href="#" class="info">
+                                <!-- icon -->
+                                <i class="info__icon far fa-envelope"></i>
+                                <!-- info -->
+                                <span class="info__data">admin@porto.com</span>
+                            </a>
+                        </li>
+                    </ul>
+                    <!-- side menu -->
+                    <ul class="list list--hr">
+                        <li class="list__item">
+                            <a href="#" class="link">
+                                <!-- icon -->
+                                <i class="link__icon fas fa-angle-right"></i>
+                                <!-- info -->
+                                About Us
+                            </a>
+                        </li>
+                        <li class="list__item">
+                            <a href="#" class="link">
+                                <!-- icon -->
+                                <i class="link__icon fas fa-angle-right"></i>
+                                <!-- info -->
+                                Contact Us
+                            </a>
+                        </li>
+                        <!-- languges -->
+                        <li class="list__item">
+                            <!-- drop down -->
+                            <!-- to oppen dropdown dropdown--opened -->
+                            <div class="dropdown ">
+                                <!-- header -->
+                                <div class="dropdown__header">
+                                    <a href="#" class="link">
+                                        <img class="flag flag-us" src="" alt="">
+                                        English
+                                    </a>
+                                    <i class="fas fa-angle-down"></i>
+                                </div>
+
+                                <!-- items -->
+                                <div class="dropdown__body">
+                                    <ul class="dropdown__items list">
+                                        <li class="dropdown__item list__item">
+                                            <a href="#" class="link">
+                                                <img class="flag flag-us" src="" alt="">
+                                                English
+                                            </a>
+                                        </li>
+                                        <li class="dropdown__item list__item">
+                                            <a href="#" class="link">
+                                                <img class="flag flag-es" src="" alt="">
+                                                Español
+                                            </a>
+                                        </li>
+                                        <li class="dropdown__item list__item">
+                                            <a href="#" class="link">
+                                                <img class="flag flag-fr" src="" alt="">
+                                                Française
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- middle header -->
+            <div class="header__middle container">
+                <!-- logo -->
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="header__logo-box">
+                    <img class="header__logo" src="/img/logo-flat.png" alt="">
+                </a>
+                <!-- user options -->
+                <div class="header__user-options">
+                    <partial name="_LoginPartial" />
+
+                    @if (ViewData["Title"].ToString() != "Log in" && ViewData["Title"].ToString() != "Register")
+                    {
+                        @RenderSection("Cart", required: false)
+                       
+
+                    }
+                </div>
+            </div>
+            <!-- lower header -->
+            <div class="header__lower container">
+                <!-- navigation -->
+                <nav class="nav">
+                    <ul class="nav__items list list--hr">
+                        <!-- items -->
+                        <li class="nav__item">
+                            <a class="nav__link text-decoration-none" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="nav__item">
+                            <a class="nav__link text-decoration-none" asp-area="" asp-controller="Categories" asp-action="Index">Categories</a>
+                        </li>
+                        <li class="nav__item dropdown ">
+                            <!-- title -->
+                            <a class="nav__link dropdown__header text-decoration-none " asp-area="" asp-controller="Products" asp-action="Index">
+                                Products
+                            </a>
+                            @{
+                                if (this.User.IsInRole("Admin") || this.User.IsInRole("Shop_Owner"))
+                                {
+                                    <!-- items -->
+                                    <div class="dropdown__body">
+                                        <ul class=" list">
+                                            <li class="list__item">
+                                                <a class="nav__inner-link text-decoration-none" asp-area="" asp-controller="Products" asp-action="Index">Product Listing</a>
+                                            </li>
+                                            <li class="list__item">
+                                                <a class="nav__inner-link text-decoration-none" asp-area="" asp-controller="Products" asp-action="Create">Add Product</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                }
+                            }
+
+                        </li>
+                        <li class="nav__item">
+                            <a class="nav__link text-decoration-none" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        </li>
+                        @{
+                            if (this.User.IsInRole("Admin"))
+                            {
+                                <li class="nav__item dropdown ">
+                                    <!-- title -->
+                                    <a class="nav__link dropdown__header text-decoration-none " asp-area="" asp-controller="Admin" asp-action="ManageUsers">
+                                        Adminstration
+                                    </a>
+                                    <!-- items -->
+                                    <div class="dropdown__body">
+                                        <ul class=" list">
+                                            <li class="list__item">
+                                                <a class="nav__inner-link text-decoration-none" asp-area="" asp-controller="Admin" asp-action="ManageRoles">Manage Roles</a>
+                                            </li>
+                                            <li class="list__item">
+                                                <a class="nav__inner-link text-decoration-none" asp-area="" asp-controller="Admin" asp-action="ManageCategroies">Categroies Request</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            }
+                        }
+
+
+                        <li class="nav__item">
+                            <a class="nav__link text-decoration-none" asp-controller="Home" asp-action="About">About Us</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+    <div class="container">
+        <partial name="_CookieConsentPartial" />
+        @RenderBody()
+    </div>
+
+    <div class="footer">
+        <!-- subscription -->
+        <div></div>
+        <!-- menu -->
+        <div></div>
+        <!-- contact info -->
+        <div></div>
+    </div>
+    <environment include="Development">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"
+                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+                asp-fallback-test="window.jQuery"
+                crossorigin="anonymous"
+                integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=">
+        </script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"
+                asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"
+                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
+                crossorigin="anonymous"
+                integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o">
+        </script>
+    </environment>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        var x = true;
+        $(document).ready(function () {
+
+
+            $("#cart").click(function () {
+                if (x) {
+                    $('#eslam').addClass('dropdown--opened');
+                    x = false;
+                    console.log("layout");
+
+                }
+                else {
+                    $('#eslam').removeClass('dropdown--opened');
+                    x = true;
+                    console.log("layout");
+                }
+            });
+
+        });
+        function AddToCart() {
+            var tags = document.getElementById("tags");
+            var tagTitle = document.getElementById("TagTextBox").value;
+            if (tagTitle) {
+                $(tags).append('<div class="taged-textbox__tag">' + '<input value="' + tagTitle + '" type="hidden" data-val="true" data-val-maxlength="The field Title must be a string or array type with a maximum length of 50." data-val-maxlength-max="50" data-val-required="The Title field is required." id="Tags_' + i + '__Title" name="Tags[' + i + '].Title"><span>' + tagTitle + '</span></span><span class="taged-textbox__remove closebtn" onclick="RemoveTag(this)"><i class="fas fa-times"></i></span></div>');
+            }
+        }
+    </script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

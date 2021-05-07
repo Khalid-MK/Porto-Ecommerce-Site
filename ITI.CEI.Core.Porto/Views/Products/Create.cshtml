@@ -1,0 +1,446 @@
+﻿@model ProductViewModel
+@{
+    ViewData["Title"] = "Add Product";
+
+}
+
+@section Styles{
+
+    <style>
+        #files {
+            visibility: hidden;
+            display: none;
+        }
+
+        .fa-plus-square {
+            cursor: pointer;
+        }
+
+        .fa-trash-alt {
+            cursor: pointer;
+        }
+
+        .fa-edit {
+            cursor: pointer;
+        }
+    </style>
+
+}
+
+
+<form class="add-product" method="post" asp-action="Create" enctype="multipart/form-data">
+    <div class="add-product__images slider">
+        <div class="add-product__image-actions">
+            <div class="add-product__image-action">
+
+                <label class="label_file0" for="file0" style="display:inline-block">
+                    <i class="fas fa-plus-square"></i>
+                </label>
+                <input id="file0" type="file" asp-for="images" style="display:none" name="images">
+                <label class="label_file0" for="file0" style="display:inline-block"><i class="fas fa-edit"></i></label>
+                <label class="label_file0 deleteBtn" style="display:inline-block"><i class="fas fa-trash-alt"></i></label>
+
+                <label class="label_file1" for="file1" style="display:none">
+                    <i class="fas fa-plus-square"></i>
+                </label>
+                <input id="file1" type="file" asp-for="images" style="display:none" name="images">
+                <label class="label_file1" for="file1" style="display:none"><i class="fas fa-edit"></i></label>
+                <label class="label_file1 deleteBtn" style="display:none"><i class="fas fa-trash-alt"></i></label>
+
+                <label class="label_file2" for="file2" style="display: none">
+                    <i class="fas fa-plus-square"></i>
+                </label>
+                <input id="file2" type="file" asp-for="images" style="display:none" name="images">
+                <label class="label_file2" for="file2" style="display:none"><i class="fas fa-edit"></i></label>
+                <label class="label_file2 deleteBtn" style="display:none"><i class="fas fa-trash-alt"></i></label>
+
+
+            </div>
+        </div>
+        <div class="slider__items">
+            <div id="slider1" class="slider__item active">
+
+                <img src='/img/products/product-grey-7.jpg' style="width:100%;max-width:555px" id='uploaded1'>
+
+            </div>
+            <div id="slider2" class="slider__item"><img src='/img/products/product-grey-7.jpg' style="width:100%;max-width:555px" id='uploaded2'></div>
+            <div id="slider3" class="slider__item"><img src='/img/products/product-grey-7.jpg' style="width:100%;max-width:555px" id='uploaded3'></div>
+        </div>
+        <div class="slider__indicators">
+            <span id="1" class="slider__indicator active"></span>
+            <span id="2" class="slider__indicator "></span>
+            <span id="3" class="slider__indicator"></span>
+        </div>
+
+    </div>
+    <div class="add-product__data">
+        <div class="form-controls">
+            <section class="tabs">
+                <div class="tabs__headers">
+                    <div class="tabs__header active">
+                        English
+                    </div>
+                    <div class="tabs__header">
+                        Arabic
+                    </div>
+                </div>
+                <div class="tabs__bodies">
+                    <div class="tabs__body active">
+                        <div class="form-group">
+                            <label asp-for="Product.Name"></label>
+                            <input asp-for="Product.Name" class="form-control" />
+                            <span asp-validation-for="Product.Name" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Product.Description"></label>
+                            <textarea asp-for="Product.Description" class="form-control"></textarea>
+                            <span asp-validation-for="Product.Description" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="form-group">
+                <label asp-for="Product.UnitPrice"></label>
+                <input asp-for="Product.UnitPrice" class="form-control" />
+                <span asp-validation-for="Product.UnitPrice" class="text-danger"></span>
+            </div>
+
+            <div class="add-product__discount">
+                <div class="form-group">
+                    <label for="">Satus</label>
+                    <div class="form-group__radios">
+                        <div class="form-group__radio"><input type="radio" name="discount" onchange="active_discount()" id=""><span>On Sale</span></div>
+                        <div class="form-group__radio"><input type="radio" checked="checked" onchange="disable_discount()" name="discount" id=""><span>Not On Sale</span></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Product.Discount"></label>
+                    <div class="input-group mb-3">
+                        <input asp-for="Product.Discount" readonly="readonly" class="form-control" id="Discount_value" />
+                        <div class="input-group-append">
+                            <span class="input-group-text" style="font-size: 1.4rem;">%</span>
+                        </div>
+                    </div>
+                    <span asp-validation-for="Product.Discount" data-toggle="ajax-modal" data-target="#add-contact" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="">Payment Types</label>
+                <div class="form-group__checkboxs">
+
+                    @{
+                        for (int i = 0; i < Model.PaymentTypes.Count(); i++)
+                        {
+                            <div class="form-group__checkbox">
+
+                                <input asp-for="@Model.PaymentTypes[i].checkBoxAnswer" type="checkbox" checked="checked" />
+
+                                <span asp-for="@Model.PaymentTypes[i].Id">@Model.PaymentTypes[i].Title</span>
+
+                                <input asp-for="@Model.PaymentTypes[i].Id" type="hidden" />
+
+                                <input asp-for="@Model.PaymentTypes[i].Title" type="hidden" />
+
+                            </div>
+                        }
+                    }
+
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label asp-for="Product.Category"></label>
+                <select asp-for="Product.Fk_Category" asp-items="new SelectList(Model.Categories , nameof(Category.Id),nameof(Category.Name))" class="form-control">
+                    <option value="">-- Select Category --</option>
+                </select>
+                <span asp-validation-for="Product.Fk_Category" class="text-danger"></span>
+            </div>
+
+            <button type="button" id="btnclick" class="btn btn--primary btn-sm">Request new category</button>
+
+            <br />
+
+
+            @*  ***  to request a new category from admin  *** *@
+
+            <input hidden asp-for="CategoryRequest.Title" type="text" class="form-control" id="requestTitle">
+            <input hidden asp-for="CategoryRequest.Description" type="text" class="form-control" id="requestDesc">
+
+
+
+            <div class="taged-textbox form-group">
+                <label class="taged-textbox__lable" for="">Tags</label>
+                <div class="taged-textbox__data">
+                    <div id="tags" class="taged-textbox__tags">
+
+                        @*  ***  Sample of tag  ***  *@
+
+                        @*<div class="taged-textbox__tag">
+                                <input asp-for="Tags[0].Title" value="tag" type="hidden" />
+                                <span>tag</span>
+                                <span class="taged-textbox__remove closebtn" onclick="RemoveTag(this)">
+                                    <i class="fas fa-times"></i>
+                                </span>
+                            </div>
+                            <input asp-for="Tags[0].Title" value="" type="hidden" />*@
+
+
+                    </div>
+                    <div class="taged-textbox__clear">
+                        <span onclick="RemoveAllTags(this)"><i class="fas fa-times"></i></span>
+                    </div>
+                </div>
+                <input class="taged-textbox__textbox form-control" type="text" name="" id="TagTextBox">
+            </div>
+
+            <div class="add-product__actions">
+                <button href="#" class="btn btn--gray">Cancel</button>
+                <button type="submit" class="btn btn--primary">Add</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+
+
+<div class="modal fade " id="requestModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="exampleModalLabel">Request new category</h2>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="request-title" class="col-form-label">Category Title</label>
+                        <input type="text" class="form-control" id="request-title">
+                    </div>
+                    <div class="form-group">
+                        <label for="description-text" class="col-form-label">Description</label>
+                        <textarea class="form-control" id="description-text"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnHideModal" class="btn btn-primary">Send Request</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        function active_discount() {
+            document.getElementById("Discount_value").readOnly = false;
+        }
+
+        function disable_discount() {
+            document.getElementById("Discount_value").readOnly = true;
+            $("#Discount_value").val("")
+        }
+
+        var TagBoxInput = document.getElementById("TagTextBox");
+
+        var i = 0;
+
+        function RemoveAllTags(el) {
+            var element = el;
+            var tags = document.getElementById("tags");
+            tags.innerHTML = '';
+            i = 0;
+        }
+
+
+        function RemoveTag(el) {
+            var element = el;
+            element.parentElement.remove();
+        }
+
+        function AddNewTag() {
+            var tags = document.getElementById("tags");
+            var tagTitle = document.getElementById("TagTextBox").value;
+            if (tagTitle) {
+                // to append new tag
+                $(tags).append('<div class="taged-textbox__tag">' + '<input value="' + tagTitle + '" type="hidden" data-val="true" data-val-maxlength="The field Title must be a string or array type with a maximum length of 50." data-val-maxlength-max="50" data-val-required="The Title field is required." id="Tags_' + i + '__Title" name="Tags[' + i + '].Title"><span>' + tagTitle + '</span></span><span class="taged-textbox__remove closebtn" onclick="RemoveTag(this)"><i class="fas fa-times"></i></span></div>');
+
+                // to save list sequanse
+                $(tags).append('<input value="" type="hidden" data-val="true" data-val-maxlength="The field Title must be a string or array type with a maximum length of 50." data-val-maxlength-max="50" data-val-required="The Title field is required." id="Tags_' + i + '__Title" name="Tags[' + i + '].Title">')
+                i = i + 1;
+            }
+        }
+
+
+        ////to input tags by space
+        //TagBoxInput.addEventListener("keyup", function (event) {
+        //    if (event.keyCode === 32) {
+        //        event.preventDefault();
+        //        AddNewTag();
+        //        this.value = ''
+        //    }
+        //});
+
+
+        //to input tags by enter or space
+        var TagBoxInput = document.getElementById("TagTextBox");
+        TagBoxInput.addEventListener("keyup", function (event) {
+            if (event.keyCode === 13) {
+                event.preventDefault();
+                AddNewTag();
+                this.value=''
+            }
+            else if (event.keyCode === 32) {
+                event.preventDefault();
+                AddNewTag();
+                this.value = ''
+            }
+        });
+
+        $("#TagTextBox").focus(function () {
+            $('.add-product').on('keyup keypress', function (e) {
+                var keyCode = e.keyCode || e.which;
+                if (keyCode === 13) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+        });
+
+        var sliderId = 1;
+
+        $(function () {
+
+            // Viewing Uploaded Picture On Setup Admin Profile
+            function livePreviewPicture(picture) {
+                var uploaded = "uploaded" + $(".slider__indicator.active").attr('id');
+                if (picture.files && picture.files[0]) {
+                    var picture_reader = new FileReader();
+                    picture_reader.onload = function (event) {
+                        $(`#${uploaded}`).attr('src', event.target.result);
+                    };
+                    picture_reader.readAsDataURL(picture.files[0]);
+                }
+            }
+
+            $(file0).on('change', function () {
+                var uploaded = "uploaded" + $(".slider__indicator.active").attr('id');
+                $(`#${uploaded}`).fadeIn();
+                livePreviewPicture(this);
+            });
+
+            $(file1).on('change', function () {
+                var uploaded = "uploaded" + $(".slider__indicator.active").attr('id');
+                $(`#${uploaded}`).fadeIn();
+                livePreviewPicture(this);
+            });
+
+            $(file2).on('change', function () {
+                var uploaded = "uploaded" + $(".slider__indicator.active").attr('id');
+                $(`#${uploaded}`).fadeIn();
+                livePreviewPicture(this);
+            });
+
+        });
+
+
+
+        $(".slider__indicator").click(function () {
+            $(".slider__indicator").removeClass("active");
+            $(".slider__item").removeClass("active");
+            $(this).toggleClass('active');
+            var sliderId = this.id;
+            var id = "slider" + sliderId;
+            $(`#${id}`).toggleClass("active");
+
+            var label_file0 = document.getElementsByClassName('label_file0');
+            var label_file1 = document.getElementsByClassName('label_file1');
+            var label_file2 = document.getElementsByClassName('label_file2');
+
+            if (sliderId == 1) {
+
+                for (var i = 0; i < label_file0.length; i++) {
+                    label_file0[i].style.display = "inline-block"
+                }
+                for (var i = 0; i < label_file1.length; i++) {
+                    label_file1[i].style.display = "none"
+                }
+                for (var i = 0; i < label_file2.length; i++) {
+                    label_file2[i].style.display = "none"
+                }
+
+            } else if (sliderId == 2) {
+
+                for (var i = 0; i < label_file0.length; i++) {
+                    label_file0[i].style.display = "none"
+                }
+                for (var i = 0; i < label_file1.length; i++) {
+                    label_file1[i].style.display = "inline-block"
+                }
+                for (var i = 0; i < label_file2.length; i++) {
+                    label_file2[i].style.display = "none"
+                }
+
+            } else if (sliderId == 3) {
+
+                for (var i = 0; i < label_file0.length; i++) {
+                    label_file0[i].style.display = "none"
+                }
+                for (var i = 0; i < label_file1.length; i++) {
+                    label_file1[i].style.display = "none"
+                }
+                for (var i = 0; i < label_file2.length; i++) {
+                    label_file2[i].style.display = "inline-block"
+                }
+
+            }
+
+        });
+
+        $(".deleteBtn").click(function () {
+            let result = confirm("Image will be deleted are you sure ?")
+
+            if (result) {
+
+                var id = $(".slider__indicator.active").attr('id');
+                var uploaded = "uploaded" + id;
+                $(`#${uploaded}`).attr({
+                    src: '/img/products/product-grey-7.jpg',
+                });
+                document.getElementById(`file${id - 1}`).value = "";
+                console.log(document.getElementById(`file${id - 1}`));
+
+            }
+        });
+
+
+        // to show pop up form
+        $("#btnclick").click(function () {
+            $("#requestModal").modal('show');
+        });
+
+        // to hide pop up form
+        $("#btnHideModal").click(function () {
+            var value = $('#request-title').val();
+            $('#requestTitle').val(value);
+            var value2 = $('#description-text').val();
+            $('#requestDesc').val(value2);
+            $("#requestModal").modal('hide');
+        });
+
+
+
+    </script>
+}

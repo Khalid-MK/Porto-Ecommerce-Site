@@ -1,0 +1,5 @@
+﻿$(".learnMoreText").click(function () {
+
+    window.location = "../Dib";
+
+})

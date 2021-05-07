@@ -1,0 +1,91 @@
+{
+  "format": 1,
+  "restore": {
+    "G:\\CEI\\Assignments\\ASP Core\\Project\\Code\\ITI.CEI.Core\\ITI.CEI.Core.Porto\\ITI.CEI.Core.Porto.csproj": {}
+  },
+  "projects": {
+    "G:\\CEI\\Assignments\\ASP Core\\Project\\Code\\ITI.CEI.Core\\ITI.CEI.Core.Porto\\ITI.CEI.Core.Porto.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "G:\\CEI\\Assignments\\ASP Core\\Project\\Code\\ITI.CEI.Core\\ITI.CEI.Core.Porto\\ITI.CEI.Core.Porto.csproj",
+        "projectName": "ITI.CEI.Core.Porto",
+        "projectPath": "G:\\CEI\\Assignments\\ASP Core\\Project\\Code\\ITI.CEI.Core\\ITI.CEI.Core.Porto\\ITI.CEI.Core.Porto.csproj",
+        "packagesPath": "C:\\Users\\Khalid\\.nuget\\packages\\",
+        "outputPath": "G:\\CEI\\Assignments\\ASP Core\\Project\\Code\\ITI.CEI.Core\\ITI.CEI.Core.Porto\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Khalid\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp2.2"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp2.2": {
+            "targetAlias": "netcoreapp2.2",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp2.2": {
+          "targetAlias": "netcoreapp2.2",
+          "dependencies": {
+            "Microsoft.AspNet.WebApi.Core": {
+              "target": "Package",
+              "version": "[5.2.7, )"
+            },
+            "Microsoft.AspNetCore.App": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[2.2.0, )",
+              "autoReferenced": true
+            },
+            "Microsoft.AspNetCore.Razor.Design": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
+            "Microsoft.NETCore.App": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[2.2.0, )",
+              "autoReferenced": true
+            },
+            "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
+              "target": "Package",
+              "version": "[2.2.4, )"
+            },
+            "ReflectionIT.Mvc.Paging": {
+              "target": "Package",
+              "version": "[3.5.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.201\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

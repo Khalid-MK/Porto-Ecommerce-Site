@@ -1,0 +1,387 @@
+﻿@model ProductViewModel
+@using ReflectionIT.Mvc.Paging
+@addTagHelper *,ReflectionIT.Mvc.Paging
+
+@{
+
+    ViewData["Title"] = "Index";
+}
+
+
+<body>
+
+    <!-- Listing Items -->
+    <div class="container">
+
+        <partial name="_FiltersPartial" model="@Model" />
+        <section class="item-listing">
+            <form name="myform" method="post" id="myform">
+                <div class="item-listing__tools">
+                    <div class="item-listing__tools">
+                        <select class="form-control" id="mylist" name="mylist" onchange="nav()">
+                            <option value="1">Featured</option>
+                            <option value="Price low to high">Price low to high</option>
+                            <option value="Price high to low">Price high to low</option>
+                            <option value="Name">Name</option>
+                        </select>
+                        <a class="action-btn" asp-action="Create">
+                            <i class="fas fa-plus"></i>
+                        </a>
+                    </div>
+                </div>
+            </form>
+            <!-- Items -->
+            <div class="item-listing__items item-listing--3items" id="output" style="width:100%">
+
+
+                @foreach (var item in Model.ProductsPaging)
+                {
+
+                    <div class="item-medium-1" id="@item.Id">
+
+
+                        @if (item.Discount != null && item.Discount > 0)
+                        {
+                            <div class="item-medium-1__alert">Sale</div>
+                        }
+
+
+                        @if (item.Images.Count == 0)
+                        {
+                            <div class="item-medium-1__image  image" onclick="Addtocart(@item.Id,this)" id="image" style="background-image:url(../NoImageFound.jpg);background-size: 100% 100%;background-repeat: no-repeat;cursor:pointer;" @*onclick="location.href='@Url.Action("Details", "Products", new { id = item.Id })'"*@>
+                                <a id="AddtoCart" class="item-medium-1__action text-decoration-none">Add to Cart</a>
+                            </div>
+
+                        }
+                        else
+                        {
+
+                            <div class="item-medium-1__image  image" onclick="Addtocart(@item.Id,this)" id="image" style="background: url(data:image/png;base64,@Convert.ToBase64String(item.Images[0].img));background-size: 100% 100%;background-repeat: no-repeat;cursor:pointer;" @*onclick="location.href='@Url.Action("Details", "Products", new { id = item.Id })'"*@>
+                                <a id="AddtoCart" class="item-medium-1__action text-decoration-none">Add to Cart</a>
+                            </div>
+
+                        }
+                        <a asp-action="Details" asp-route-id="@item.Id" class="text-decoration-none ">
+                            <h4 id="nameofproduct" class="name_ofproduct">@Html.DisplayFor(modelItem => item.Name)</h4>
+                            <div class="flex-row">
+                                <div>
+                                    @if (item.Discount != null && item.Discount > 0)
+                                    {
+                                        <del>@item.UnitPrice L.E </del>
+                                        <span class="lable lable1" id="productprice">
+                                            @(Math.Ceiling((float)(item.UnitPrice - ((item.Discount / 100) * item.UnitPrice)))) L.E
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span id="productprice " class="lable lable1">@item.UnitPrice L.E </span>
+                                    }
+
+                                </div>
+                            </div>
+                        </a>
+                        <div class="crud-actions">
+
+
+                            @{
+                                if (this.User.IsInRole("Admin"))
+                                {
+                                    <a asp-controller="Products" asp-action="Details" asp-route-id="@item.Id"><i class="far fa-eye"></i></a>
+                                    <a asp-controller="Products" asp-action="Edit" asp-route-id="@item.Id"><i class="fas fa-edit"></i></a>
+                                    <a href="#" onclick="deleteProduct(@item.Id)"><i class="fas fa-trash-alt"></i></a>
+                                }
+                                else if (this.User.IsInRole("Shop_Owner"))
+                                {
+                                    <a asp-controller="Products" asp-action="Details" asp-route-id="@item.Id"><i class="far fa-eye"></i></a>
+                                    if (item.Fk_OwnerID == Model.UserID)
+                                    {
+                                        <a asp-controller="Products" asp-action="Edit" asp-route-id="@item.Id"><i class="fas fa-edit"></i></a>
+                                        <a href="#" onclick="deleteProduct(@item.Id)"><i class="fas fa-trash-alt"></i></a>
+                                    }
+                                }
+                                else
+                                {
+                                    <a asp-controller="Products" asp-action="Details" asp-route-id="@item.Id"><i class="far fa-eye"></i></a>
+
+                                }
+                            }
+
+                        </div>
+
+
+                    </div>
+
+                    <input type="hidden" value="@item.Id" id="@item.Name id" />
+
+                }
+
+            </div>
+            <nav aria-label="Products navigation example">
+                <vc:pager paging-list="@Model.ProductsPaging" />
+            </nav>
+        </section>
+    </div>
+    @section Cart{
+
+        <div class="dropdown dropdown--left " style="cursor:pointer;" id="eslam">
+            <!-- header -->
+            <div id="cart" class="dropdown__header">
+                <div id="imagecart" class="image image--small" style="background-image: url('/img/icons/icon-cart-big.svg')">
+                    @*<div  class="notification notification--danger">
+                          1
+                        </div>*@
+                </div>
+            </div>
+            <!-- body -->
+            <div class="dropdown__body">
+                <!-- items -->
+                <ul class="dropdown__items list list--vr-separator" id="unorderedlist">
+                    @{
+                        double totalprice = 0;
+                        if (Model.productorders != null && Model.productorders.Count() > 0)
+                        {
+                            @foreach (var item in Model.productorders)
+                            {
+
+                                <li class="dropdown__item list__item">
+                                    <!-- item small 2 -->
+                                    <div class="item-small-1">
+                                        <!-- item data -->
+                                        <div class="item-small-1__data">
+                                            <!-- title -->
+                                            <a href="" class="item-small-1__title">@item.product.Name</a>
+                                            <!-- price -->
+                                            @if (item.product.Discount != null && item.product.Discount > 0)
+                                            {
+                                                <span id="@item.product.Name" class="item-small-1__description">
+                                                    @item.Quantity X  @(Math.Ceiling((float)(item.product.UnitPrice - ((item.product.Discount / 100) * item.product.UnitPrice))))
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span id="@item.product.Name" class="item-small-1__description">
+                                                    @item.Quantity X @item.product.UnitPrice
+                                                </span>
+                                            }
+                                        </div>
+
+                                        <!-- item image -->
+                                        <div class="item-small-1__image-box">
+                                            @if (item.product.Images.Count == 0)
+                                            {
+                                                <a href="#" class="item-small-1__image image" style="background: url(../NoImageFound.jpg);background-size: 100% 100%;background-repeat: no-repeat;">
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                                <a href="#" class="item-small-1__image image" style="background: url(data:image/png;base64,@Convert.ToBase64String(item.product.Images[0].img));background-size: 100% 100%;background-repeat: no-repeat;">
+                                                </a>
+                                            }
+                                            <a href="#" onclick="RemoveProduct(this)" class="item-small-1__action">
+                                                <i class="fas fa-times"></i>
+                                            </a>
+                                        </div>
+
+                                    </div>
+                                </li>
+                                if (item.product.Discount > 0 && item.product.Discount != null)
+                                {
+                                    totalprice = totalprice + Math.Ceiling((float)(item.product.UnitPrice - ((item.product.Discount / 100) * item.product.UnitPrice)));
+                                }
+                                else
+                                {
+
+                                    totalprice = totalprice + item.product.UnitPrice;
+                                }
+                            }
+                        }
+                    }
+
+                </ul>
+
+
+
+
+                <!-- totals -->
+                <div class="separator"></div>
+                <div class="block">
+                    <span class="lable">Total:</span>
+                    <span class="lable" id="totalprice">@totalprice L.E</span>
+                </div>
+                <!-- actions -->
+                <div class="block list list--hr">
+                    <a class="list-item btn btn--gray" href="">View Cart</a>
+                    <a class="list-item btn btn--primary" href="">Checkout</a>
+                </div>
+            </div>
+        </div>
+
+
+    }
+
+</body>
+
+@section Scripts{
+
+    <script>
+
+
+
+        $('#mylist').on("change",function () {
+            var sortExpression = $("#mylist option:selected").val();
+            $.ajax({
+              url: '@Url.Action("Index", "Products")',
+                data: { 'sortExpression': sortExpression },
+                type: "POST",
+                success: function (response) {
+                    var result = $('<div />').append(response).find('#output').html();
+                    $('#output').html(result);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                }
+            });
+        });
+
+        function deleteProduct(id) {
+            let Result = confirm("Are you sure you want to delete ?")
+            if (Result) {
+                $.ajax({
+                    url: "/Products/Delete/" + id,
+                    type: "Get",
+                    success: function (res) {
+                        if (res) {
+                            $('#' + id).remove();
+                        }
+                    },
+                    error: function (x, y, err) {
+
+                    }
+                })
+            }
+        }
+
+                    var flag = false;
+                    var no = 0;
+
+                    var productprice;
+
+        function Addtocart(id, ele) {
+            console.log('lll');
+            var name_ofproduct = $(`#${ele.parentElement.id}`).find('.name_ofproduct')[0].textContent;
+            if (document.getElementById(name_ofproduct) != null) {
+                console.log(name_ofproduct);
+                var noOfAddedProduct = (document.getElementById(name_ofproduct).innerHTML.split('X')[0]*1)+1;
+                console.log(noOfAddedProduct);
+            }
+
+            $.ajax({
+                url: "/Products/AddtoCart/" + id,
+                type: "Get",
+                data: { 'noOfAddedProduct': noOfAddedProduct },
+                success: function (res) {
+
+
+                    productprice = $(`#${ele.parentElement.id}`).find('.lable1')[0].textContent;
+                    var image = $(`#${ele.parentElement.id}`).find('.item-medium-1__image').css('background-image');
+                        image = image.replace('url(', '').replace(')', '').replace(/\"/gi, "");
+                        var es = document.getElementsByClassName('item-small-1__title');
+                        for (var i = 0; i < es.length; i++) {
+
+                            if (es[i].textContent == name_ofproduct) {
+                                flag = true;
+                                break;
+                            }
+                            else {
+                                flag = false;
+                            }
+
+                        }
+                        if (!unorderedlist.innerHTML) {
+                            flag = false;
+                        }
+                        if (flag) {
+
+                            var no = document.getElementById(name_ofproduct).innerHTML.split('X')[0];
+                            var t = (no * 1) + 1;
+                            $(`#${name_ofproduct}`).replaceWith(' <span id="' + name_ofproduct + '" class="item-small-1__description"> ' + t + ' X ' + productprice + '  </span>');
+                        }
+                        else {
+                            var iter = 1;
+                            $("#unorderedlist").append('<li class="dropdown__item list__item">   <div class="item-small-1">  <div class="item-small-1__data"> <a href="" class="item-small-1__title">' + name_ofproduct + '</a>  <span id="' + name_ofproduct + '" class="item-small-1__description"> ' + iter + ' X ' + productprice + '  </span>  </div>   <div class="item-small-1__image-box"> <img src=" ' + image + ' " class="item-small-1__image image" />  <a  class="item-small-1__action" onclick="RemoveProduct(this)"><i class="fas fa-times"></i></a>    </div> </div>  </li>');
+                        }
+                        calc();
+
+
+                },
+            });
+
+        }
+
+        function RemoveProduct(el) {
+            var nameofproduct = el.parentElement.parentElement.querySelector('a').innerHTML;
+            var id = document.getElementById(`${nameofproduct} id`).value;
+            var element = el;
+            var no = element.parentElement.parentElement.querySelector('span').innerHTML.split('X')[0];
+
+            var productprice = element.parentElement.parentElement.querySelector('span').innerHTML.split('X')[1];
+            var y = element.parentElement.parentElement.querySelector('a').innerHTML;
+            var t = (no * 1) - 1;
+
+            if (t>=1) {
+
+            $(`#${y}`).replaceWith(' <span id="' + y + '" class="item-small-1__description"> ' + t + ' X ' + productprice + '  </span>')
+            }
+            else {
+               element.parentElement.parentElement.parentElement.remove();
+            }
+            calc();
+            function Removefromcart(id) {
+                $.ajax({
+                    url: "/Products/RemoveFromcart/" + id,
+                    type: "Get",
+                    success: function (res) {
+
+                    }
+                });
+            }
+            Removefromcart(id)
+        }
+
+            var calculator=0;
+        function calc() {
+            var list = document.getElementsByClassName('item-small-1__description');
+            if (list.length > 0) {
+
+                $("#imagecart").empty().append('<div id="noOfproductitems" class="notification notification--danger">' + list.length + '</div>')
+            }
+            else {
+                $("#imagecart").empty().append('<div id="noOfproductitems" ></div>')
+
+            }
+            for (var i = 0; i < list.length; i++) {
+                var no = parseInt(list[i].textContent.split('X')[0]);
+                var productprice = parseInt(list[i].textContent.split('X')[1]);
+                calculator = calculator + (no * productprice);
+            }
+            //console.log($('#totalprice'));
+            $("#totalprice").empty().append(calculator + ' L.E');
+
+           //console.log(calculator);
+            calculator = 0;
+        }
+
+
+
+    </script>
+
+}
+
+
+
+
+
+
+
+
+
+

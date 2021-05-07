@@ -1,0 +1,192 @@
+﻿@model AdminViewModel
+@{
+    ViewData["Title"] = "Category Rerquest";
+}
+
+@section Styles{
+
+    <style>
+        .col-8 {
+            padding-left: -10px;
+        }
+    </style>
+
+}
+
+
+
+
+<div class="row col-8">
+
+    <div>
+
+
+        <div>
+
+            <button id="btnclick" type="button" class="btn btn-primary">
+                + Add new Category
+            </button>
+
+        </div>
+
+        <br />
+        <br />
+
+        @{
+
+
+
+            if (ViewBag.Message != null)
+            {
+                <div class="alert alert-info">
+                    @ViewBag.Message
+                </div>
+            }
+
+
+            if (Model.CategoryRequests != null && Model.CategoryRequests.Count > 0)
+            {
+
+                <table class=" table table-hover table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>User Id</th>
+                            <th>Category Title</th>
+                            <th>Category Description</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody">
+
+                        @foreach (var request in Model.CategoryRequests)
+                        {
+
+                            <tr id="@request.Id">
+                                <td>@request.Fk_User</td>
+                                <td>@request.Title</td>
+                                <td>@request.Description</td>
+
+                                <td>
+                                    <button class="btn btn-primary btn-sm" onclick="CreateCat(@request.Id)">
+
+                                        Accept
+
+                                    </button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-danger btn-sm" onclick="DeleteReq(@request.Id)">
+
+                                        Reject
+
+                                    </button>
+
+                                </td>
+                            </tr>
+
+                        }
+
+                    </tbody>
+                </table>
+
+            }
+            else
+            {
+
+                <div class="alert alert-info">
+                    No Requests found.
+                </div>
+            }
+        }
+    </div>
+</div>
+
+
+<div class="modal fade " id="requestModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="exampleModalLabel">New category</h2>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form  asp-action="CreateCategory" method="post">
+                    <div class="form-group">
+                        <label for="request-title" class="col-form-label">Category title</label>
+                        <input asp-for="Category.Name" type="text" class="form-control" id="request-title">
+                    </div>
+                    <div class="form-group">
+                        <label for="request-title" class="col-form-label">Description</label>
+                        <textarea asp-for="Category.Description" type="text" class="form-control" id="request-title"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="btnHideModal" class="btn btn--gray">Close</button>
+                        <button type="submit" id="btnHideModal" class="btn btn--primary">Add Category</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+@section Scripts{
+
+    <script>
+
+        function DeleteReq(id) {
+
+            let result = confirm("Are you sure ? ");
+            if (result) {
+                $.ajax({
+                    url: `/Admin/DeleteRequest/${id}`,
+                    type: "GET",
+                    success: function (res) {
+                        if (res) {
+                            $('#' + id).remove();
+                        }
+                    },
+                    Error: function (x, y, err) {
+                        console.log(err);
+                    }
+                })
+            }
+        }
+
+        function CreateCat(id) {
+            $.ajax({
+                url: `/Admin/CreateFromRequest/${id}`,
+                type: "GET",
+                success: function (res) {
+                    $('#' + id).remove();
+                },
+                Error: function (x, y, err) {
+                    console.log(err);
+                }
+            })
+        }
+
+
+        
+        // to show pop up form
+        $("#btnclick").click(function () {
+            $("#requestModal").modal('show');
+        });
+
+        // to hide pop up form
+        $("#btnHideModal").click(function () {
+            $("#requestModal").modal('hide');
+        });
+
+
+    </script>
+
+
+}

@@ -1,0 +1,192 @@
+﻿@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+
+@section Styles{
+
+    <style>
+        :root {
+            --accent: #0088CC;
+            --border-width: 2px;
+            --font-size: 10px;
+        }
+
+        body {
+            justify-content: center;
+            align-items: center;
+        }
+
+        .containerT {
+            perspective: 800px;
+            display: inherit;
+            margin-top:10px;
+
+        }
+
+        .toggle {
+            position: relative;
+            border: solid var(--border-width) var(--accent);
+            border-radius: var(--border-radius);
+            transition: transform cubic-bezier(0, 0, 0.30, 2) .4s;
+            transform-style: preserve-3d;
+            perspective: 800px;
+        }
+
+            .toggle > input[type="radio"] {
+                display: none;
+            }
+
+            .toggle > #choice1:checked ~ #flap {
+                transform: rotateY(-180deg);
+            }
+
+                .toggle > #choice1:checked ~ #flap > .content {
+                    transform: rotateY(-180deg);
+                }
+
+            .toggle > #choice2:checked ~ #flap {
+                transform: rotateY(0deg);
+            }
+
+            .toggle > label {
+                display: inline-block;
+                min-width: 80px;
+                padding: 10px;
+                font-size: var(--font-size);
+                text-align: center;
+                color: var(--accent);
+                cursor: pointer;
+            }
+
+            .toggle > label,
+            .toggle > #flap {
+                font-weight: bold;
+                text-transform: capitalize;
+                margin-bottom: 0;
+            }
+
+            .toggle > #flap {
+                position: absolute;
+                top: calc( 0px - var(--border-width));
+                left: 50%;
+                height: calc(100% + var(--border-width) * 2);
+                width: 50%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-size: var(--font-size);
+                background-color: var(--accent);
+                border-top-right-radius: var(--border-radius);
+                border-bottom-right-radius: var(--border-radius);
+                transform-style: preserve-3d;
+                transform-origin: left;
+                transition: transform cubic-bezier(0.4, 0, 0.2, 1) .5s;
+            }
+
+                .toggle > #flap > .content {
+                    color: #eee;
+                    transition: transform 0s linear .25s;
+                    transform-style: preserve-3d;
+                }
+    </style>
+
+}
+
+<div class="container">
+    <form class="login" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+        <h4 class="login__header" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+            Register An Account
+        </h4>
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="Input.Email">E-mail Address</label>
+            <input asp-for="Input.Email" class="form-control">
+            <span asp-validation-for="Input.Email" class="text-danger"></span>
+        </div>
+        <div class="form-row" style="margin-left: 0px;">
+            <div class="form-group">
+                <label asp-for="Input.Password">Password</label>
+                <input asp-for="Input.Password" class="form-control">
+                <span asp-validation-for="Input.Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.ConfirmPassword">Re-enter Password</label>
+                <input asp-for="Input.ConfirmPassword" class="form-control">
+                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="containerT">
+
+            <div class="toggle">
+
+                <input asp-for="Input.RoleTitle" type="radio" id="choice1" value="Shop_Owner" >
+                <label for="choice1">Shop Owner</label>
+
+                <input asp-for="Input.RoleTitle" type="radio" id="choice2" value="Customer" >
+                <label for="choice2">Customer</label>
+
+                <div id="flap"><span class="content">Customer</span></div>
+
+            </div>
+
+        </div>
+
+        <br />
+        <p>By creating an account you agree to our <a asp-controller="Home" asp-action="Privacy" style="color:dodgerblue">Terms & Privacy</a>.</p>
+        <div class="login__remember-me">
+            <div class="add-product__actions">
+                <button asp-controller="Home" asp-action="Index" class="btn btn--gray">Cancel</button>
+                <button style="margin-right: 0.65rem" type="submit" class="btn btn--primary">Register</button>
+            </div>
+        </div>
+        <a asp-page="./Login" class="login__register-now">You are alredy a member?</a>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        
+        const st = {};
+
+        st.flap = document.querySelector('#flap');
+        st.toggle = document.querySelector('.toggle');
+
+        st.choice1 = document.querySelector('#choice1');
+        st.choice2 = document.querySelector('#choice2');
+
+        st.flap.addEventListener('transitionend', () => {
+
+            if (st.choice1.checked) {
+                st.toggle.style.transform = 'rotateY(-15deg)';
+                setTimeout(() => st.toggle.style.transform = '', 0);
+            } else {
+                st.toggle.style.transform = 'rotateY(15deg)';
+                setTimeout(() => st.toggle.style.transform = '', 0);
+            }
+
+        })
+
+        st.clickHandler = (e) => {
+
+            if (e.target.tagName === 'LABEL') {
+                setTimeout(() => {
+                    st.flap.children[0].textContent = e.target.textContent;
+                }, 0);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            st.flap.children[0].textContent = st.choice2.nextElementSibling.textContent;
+        });
+
+        document.addEventListener('click', (e) => st.clickHandler(e));
+
+    </script>
+
+}

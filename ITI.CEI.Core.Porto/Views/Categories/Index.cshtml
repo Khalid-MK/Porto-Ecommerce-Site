@@ -1,0 +1,118 @@
+﻿@*@model ReflectionIT.Mvc.PagingI.CEI.Cor.PagingList<ITe.Porto.Models.Product>*@
+@model CategoryViewModel
+@using ReflectionIT.Mvc.Paging
+@addTagHelper *,ReflectionIT.Mvc.Paging
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body>
+    <!-- header -->
+    @*<partial name="_HeaderPartial" />*@
+    <!-- Listing Items -->
+    <div class="container">
+        <partial name="_CategoryFilterPartial" model="@Model" />
+
+        <section class="item-listing">
+          
+            <!-- Items -->
+         
+            <div class="item-listing__items item-listing--3items" id="output" style="width:100%">
+
+
+                @foreach (var item in Model.Categories)
+                {
+
+                    <div class="item-medium-1" id="@item.Id">
+
+                        <div class="link list__item"><a class="text-decoration-none text-dark" asp-action="GetProductsByCategories" asp-route-category="@item.Name" asp-controller="Products"><i class="link__icon fas fa-angle-right"></i>@item.Name</a></div>
+
+                    </div>
+
+
+
+                }
+
+            </div>
+
+        </section>
+    </div>
+
+
+</body>
+</html>
+@section Scripts{
+
+    <script>
+
+
+
+        $('#mylist').on("change",function () {
+            var sortExpression = $("#mylist option:selected").val();
+
+
+            $.ajax({
+              url: '@Url.Action("Index", "Products")',
+                data: { 'sortExpression': sortExpression },
+                type: "POST",
+                //cache: false,
+                success: function (response) {
+                    var result = $('<div />').append(response).find('#output').html();
+                    $('#output').html(result);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                }
+            });
+        });
+
+        function deleteProduct(id) {
+            let Result = confirm("Are you sure you want to delete ?")
+            if (Result) {
+                $.ajax({
+                    url: "/Products/Delete/" + id,
+                    type: "Get",
+                    success: function (res) {
+                        if (res) {
+                            $('#' + id).remove();
+                        }
+                    },
+                    error: function (x, y, err) {
+
+                    }
+                })
+            }
+        }
+
+    </script>
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

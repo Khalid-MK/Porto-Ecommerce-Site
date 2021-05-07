@@ -1,0 +1,32 @@
+﻿@model CategoryViewModel
+
+
+<section class="filters">
+ 
+    
+        <!-- filter header -->
+        <h5>Product Tags</h5>
+        <!-- filter tags -->
+
+        <div class="tags">
+
+            @foreach (var item in Model.Tags)
+            {
+                <span class="tag">
+                    <a class=" text-decoration-none text-white" asp-route-Title="@item.Title" asp-controller="Products" asp-action="GetProductsByTag">@item.Title</a>
+                </span>
+            }
+        </div>
+    
+    <!-- related items -->
+    <div>
+        <!-- title -->
+        <h5></h5>
+        <!-- small item -->
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+</section>
+
+
